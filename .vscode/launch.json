@@ -1,0 +1,89 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "NeuS: Train (womask)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/exp_runner.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/.venv/bin/python3",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "args": [
+                "--mode", "train",
+                "--conf", "./confs/womask.conf",
+                "--case", "CASE_NAME",
+                "--gpu", "0"
+            ]
+        },
+        {
+            "name": "NeuS: Train (wmask)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/exp_runner.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/.venv/bin/python3",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "args": [
+                "--mode", "train",
+                "--conf", "./confs/wmask.conf",
+                "--case", "CASE_NAME",
+                "--gpu", "0"
+            ]
+        },
+        {
+            "name": "NeuS: Continue training",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/exp_runner.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/.venv/bin/python3",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "args": [
+                "--mode", "train",
+                "--conf", "./confs/womask.conf",
+                "--case", "CASE_NAME",
+                "--is_continue",
+                "--gpu", "0"
+            ]
+        },
+        {
+            "name": "NeuS: Validate mesh",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/exp_runner.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/.venv/bin/python3",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "args": [
+                "--mode", "validate_mesh",
+                "--conf", "./confs/womask.conf",
+                "--case", "CASE_NAME",
+                "--is_continue",
+                "--mcube_threshold", "0.0",
+                "--gpu", "0"
+            ]
+        },
+        {
+            "name": "NeuS: Interpolate views (0-1)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/exp_runner.py",
+            "console": "integratedTerminal",
+            "python": "${workspaceFolder}/.venv/bin/python3",
+            "cwd": "${workspaceFolder}",
+            "justMyCode": false,
+            "args": [
+                "--mode", "interpolate_0_1",
+                "--conf", "./confs/womask.conf",
+                "--case", "CASE_NAME",
+                "--is_continue",
+                "--gpu", "0"
+            ]
+        }
+    ]
+}
