@@ -8,6 +8,7 @@ from glob import glob
 
 if __name__ == '__main__':
     work_dir = sys.argv[1]
+    image_subdir = sys.argv[2] if len(sys.argv) > 2 else 'images'
     poses_hwf = np.load(os.path.join(work_dir, 'poses.npy')) # n_images, 3, 5
     poses_raw = poses_hwf[:, :, :4]
     hwf = poses_hwf[:, :, 4]
@@ -33,11 +34,21 @@ if __name__ == '__main__':
     convert_mat[2, 2] =-1.0
     convert_mat[3, 3] = 1.0
 
+    image_list = sum([glob(os.path.join(work_dir, image_subdir, '*.{}'.format(ext)))
+                       for ext in ['png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG']], [])
+    image_list.sort()
+
+    # hwf holds the resolution COLMAP ran at (full-res); scale intrinsics to
+    # match whatever resolution the actual images to train on are at.
+    sample_img = cv.imread(image_list[0])
+    actual_h, actual_w = sample_img.shape[:2]
+    res_scale = actual_w / hwf[0, 1]
+
     for i in range(n_images):
         pose = np.diag([1.0, 1.0, 1.0, 1.0]).astype(np.float32)
         pose[:3, :4] = poses_raw[i]
         pose = pose @ convert_mat
-        h, w, f = hwf[i, 0], hwf[i, 1], hwf[i, 2]
+        h, w, f = hwf[i, 0] * res_scale, hwf[i, 1] * res_scale, hwf[i, 2] * res_scale
         intrinsic = np.diag([f, f, 1.0, 1.0]).astype(np.float32)
         intrinsic[0, 2] = (w - 1) * 0.5
         intrinsic[1, 2] = (h - 1) * 0.5
@@ -67,10 +78,6 @@ if __name__ == '__main__':
     os.makedirs(out_dir, exist_ok=True)
     os.makedirs(os.path.join(out_dir, 'image'), exist_ok=True)
     os.makedirs(os.path.join(out_dir, 'mask'), exist_ok=True)
-
-    image_list = sum([glob(os.path.join(work_dir, 'images/*.{}'.format(ext)))
-                       for ext in ['png', 'PNG', 'jpg', 'JPG', 'jpeg', 'JPEG']], [])
-    image_list.sort()
 
     for i, image_path in enumerate(image_list):
         img = cv.imread(image_path)
