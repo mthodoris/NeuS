@@ -8,3 +8,5 @@ torch>=2.0.0
 scipy>=1.7.0
 PyMCubes>=0.1.2
 tensorboard
+ImageIO
+scikit-image
